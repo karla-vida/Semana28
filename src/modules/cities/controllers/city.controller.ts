@@ -1,10 +1,25 @@
-import { Controller, Post, Get, Param } from '@nestjs/common';
+import { cityDocumentation } from 'src/modules/cities/documentation';
 import { StateService } from '../../states/services/state.service';
 import { CityService } from '../services/city.service';
 import axios from 'axios';
 import { City } from '../interfaces';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CityEntity } from '../entities/city.entity';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { UpdateCityDto } from '../dto/update-city.dto';
+import { isNumber } from 'class-validator';
+const { ApiOperation: doc } = cityDocumentation;
 
 @ApiTags('cities')
 @Controller('city')
@@ -43,5 +58,29 @@ export class CityController {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  @ApiOperation(doc.updateCity)
+  @Patch('update/:id')
+  @UsePipes(new ValidationPipe())
+  async updateCity(
+    @Param('id') id: number,
+    @Body() updateCityDto: UpdateCityDto,
+  ): Promise<CityEntity> {
+    if (!isNumber(+id)) {
+      throw new BadRequestException('FieldMustBeNumber');
+    }
+    const cityUpdate = await this.cityService.updateCity(id, updateCityDto);
+    return cityUpdate;
+  }
+
+  @ApiOperation(doc.deleteById)
+  @Delete(':id')
+  @UsePipes(new ValidationPipe())
+  async deleteById(@Param('id') id: number): Promise<string> {
+    if (!isNumber(+id)) {
+      throw new BadRequestException('FieldMustBeNumber');
+    }
+    return await this.cityService.deleteCity(id);
   }
 }

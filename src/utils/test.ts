@@ -1,7 +1,32 @@
+import { CreateCityDto } from './../modules/cities/dto/create-city.dto';
+import { UpdateCityDto } from './../modules/cities/dto/update-city.dto';
 import { CreateCountryDto, CreateStateDto } from 'src/core/dtos';
-import { CountryEntity, StateEntity } from 'src/core/entities';
+import { CityEntity, CountryEntity, StateEntity } from 'src/core/entities';
 
 export class TestStatic {
+  static cityData(): CityEntity {
+    const city = new CityEntity();
+    city.state_id = 1;
+    city.name = 'Floripa';
+    const state = this.stateData();
+    city.state = state;
+    city.createdAt = new Date();
+    city.updatedAt = new Date();
+    city.deletedAt = null;
+    city.id = 1;
+
+    return city;
+  }
+  static cityDto(): UpdateCityDto {
+    let dto = new UpdateCityDto();
+    const cityDto = new CreateCityDto();
+    cityDto.name = 'Floripa';
+    cityDto.state_id = 1;
+    dto = cityDto;
+
+    return dto;
+  }
+
   static countryData(): CountryEntity {
     const country = new CountryEntity();
     country.id = 1;
