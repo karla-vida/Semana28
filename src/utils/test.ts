@@ -27,6 +27,13 @@ export class TestStatic {
     return dto;
   }
 
+  static createCityDto(): CreateCityDto {
+    const cityDto = new CreateCityDto();
+    cityDto.name = 'Floripa';
+    cityDto.state_id = 1;
+    return cityDto;
+  }
+
   static countryData(): CountryEntity {
     const country = new CountryEntity();
     country.id = 1;
